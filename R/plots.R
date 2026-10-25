@@ -157,11 +157,26 @@ plotBoiledEgg <- function(data, logp_source = NULL) {
 #' plotMW(d)
 #' @export
 plotMW <- function(data) {
+  x <- data$MW[!is.na(data$MW)]
+  n <- length(x)
+  m <- mean(x)
+  s <- sd(x)
+  med <- median(x)
+  q1 <- quantile(x, 0.25)
+  q3 <- quantile(x, 0.75)
+  sw <- shapiro.test(x)
+  subtitle <- paste0("n = ", n,
+                     " | Mean = ", round(m, 1), " \u00B1 ", round(s, 1),
+                     " | Median = ", round(med, 1), " (IQR: ", round(q1, 0), "\u2013", round(q3, 0), ")",
+                     " | Shapiro p = ", format.pval(sw$p.value, digits = 3))
+
   ggplot(data, aes(x = MW)) +
     geom_histogram(bins = 30, fill = "#3366CC", color = "white", na.rm = TRUE) +
     labs(title = "Distribution of Molecular Weight",
+         subtitle = subtitle,
          x = "MW (g/mol)", y = "Frequency") +
-    theme_minimal(base_size = 13)
+    theme_minimal(base_size = 13) +
+    theme(plot.subtitle = element_text(size = 10))
 }
 
 #' TPSA distribution histogram
@@ -173,11 +188,25 @@ plotMW <- function(data) {
 #' plotTPSA(d)
 #' @export
 plotTPSA <- function(data) {
+  x <- data$TPSA[!is.na(data$TPSA)]
+  n <- length(x)
+  m <- mean(x)
+  s <- sd(x)
+  med <- median(x)
+  q1 <- quantile(x, 0.25)
+  q3 <- quantile(x, 0.75)
+  sw <- shapiro.test(x)
+  subtitle <- paste0("n = ", n,
+                     " | Mean = ", round(m, 1), " \u00B1 ", round(s, 1),
+                     " | Median = ", round(med, 1), " (IQR: ", round(q1, 0), "\u2013", round(q3, 0), ")",
+                     " | Shapiro p = ", format.pval(sw$p.value, digits = 3))
+
   ggplot(data, aes(x = TPSA)) +
     geom_histogram(bins = 30, fill = "#33A02C", color = "white", na.rm = TRUE) +
-    labs(title = "Distribution of TPSA",
+    labs(title = "Distribution of TPSA", subtitle = subtitle,
          x = expression(TPSA~(ring(A)^2)), y = "Frequency") +
-    theme_minimal(base_size = 13)
+    theme_minimal(base_size = 13)+
+    theme(plot.subtitle = element_text(size = 10))
 }
 
 #' LogP distribution histogram
@@ -189,21 +218,34 @@ plotTPSA <- function(data) {
 #' plotLogP(d)
 #' @export
 plotLogP <- function(data) {
+  x <- data$LogP[!is.na(data$LogP)]
+  n <- length(x)
+  m <- mean(x)
+  s <- sd(x)
+  med <- median(x)
+  q1 <- quantile(x, 0.25)
+  q3 <- quantile(x, 0.75)
+  sw <- shapiro.test(x)
+  subtitle <- paste0("n = ", n,
+                     " | Mean = ", round(m, 1), " \u00B1 ", round(s, 1),
+                     " | Median = ", round(med, 1), " (IQR: ", round(q1, 0), "\u2013", round(q3, 0), ")",
+                     " | Shapiro p = ", format.pval(sw$p.value, digits = 3))
   ggplot(data, aes(x = LogP)) +
     geom_histogram(bins = 30, fill = "#E31A1C", color = "white", na.rm = TRUE) +
-    labs(title = "Distribution of LogP",
+    labs(title = "Distribution of LogP", subtitle = subtitle,
          x = "LogP", y = "Frequency") +
-    theme_minimal(base_size = 13)
+    theme_minimal(base_size = 13) +
+    theme(plot.subtitle = element_text(size = 10))
 }
 
 ## ---------------------- Radar (physicochemical profile) -------------------
-## Compares up to 5 molecules simultaneously on 6 key properties, normalized
+## Compares up to 15 molecules simultaneously on 6 key properties, normalized
 ## 0-1 against the range observed in the (filtered) dataset. Requires the
 ## 'fmsb' package.
 
 #' Radar plot of physicochemical profile
 #'
-#' Compares up to 5 molecules simultaneously on a radar chart using 6 key
+#' Compares up to 15 molecules simultaneously on a radar chart using 6 key
 #' physicochemical properties, normalized 0-1 against the range observed in
 #' the full dataset. Requires the suggested package \pkg{fmsb}.
 #'
@@ -396,14 +438,27 @@ plotTanimoto <- function(data, smiles_col, label_col = NULL,
 
   agnes_fit <- cluster::agnes(dist_mat, method = method)
 
+  ac_coeff <- agnes_fit$ac   # Agglomerative Coefficient
+
   plot(
     agnes_fit,
     which.plots = 2,
     labels = labels,
-    main = paste0("AGNES (", method, ") on Tanimoto similarity"),
+    main = paste0("AGNES (", method, ") on Tanimoto similarity\n",
+                  "AC = ", round(ac_coeff, 3)),
     xlab = "Molecules",
     sub = ""
   )
+
+  ## Clusters
+  k <- 4
+  rect.hclust(as.hclust(agnes_fit), k = k, border = "red")
+
+  #Cophenetic correlation
+
+  coph <- cor(dist_mat, cophenetic(agnes_fit))
+  mtext(paste0("Cophenetic correlation = ", round(coph, 3)),
+        side = 3, line = 0.5, cex = 0.85, adj = 1)
 
   invisible(sim_mat)
 }
@@ -475,7 +530,11 @@ plotCorrHeatmap <- function(data, props = c(
     labs(title = "Correlation between physicochemical properties",
          x = NULL, y = NULL) +
     theme_minimal(base_size = 12) +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    theme(axis.text.x = element_text(angle = 45, hjust = 1),
+          legend.position = "right",
+          legend.title = element_text(face = "bold", size = 10),
+          legend.text = element_text(size = 9),
+          plot.title = element_text(face = "bold", hjust = 0.5))
 }
 
 ## --------------------------- PCA (chemical space) -------------------------
@@ -615,9 +674,21 @@ plotPCA <- function(data, variables = NULL, color_by = "None",
   xlabel <- paste0("PC1 (", round(var_exp[1] * 100, 1), "%)")
   ylabel <- paste0("PC2 (", round(var_exp[2] * 100, 1), "%)")
 
+  ## PERMANOVA y R2
+  perm_fit <- vegan::adonis2(dist(pca_data) ~ df_aux[[color_by]], permutations = 999)
+  cum_r2 <- round(summary(pca)$importance[3, 2], 3)
+  perm_r2 <- round(perm_fit$R2[1], 3)
+  perm_f  <- round(perm_fit$F[1], 2)
+  perm_p  <- perm_fit$`Pr(>F)`[1]
+  subtitle <- paste0("Cumulative R\u00B2 = ", cum_r2,
+                     " | PERMANOVA: R\u00B2 = ", perm_r2,
+                     ", F = ", perm_f,
+                     ", p = ", format.pval(perm_p, digits = 3))
+
   g <- ggplot(scores, aes(PC1, PC2, colour = Colour)) +
     geom_point(size = 3, alpha = .9) +
-    labs(title = "Chemical Space (PCA)", x = xlabel, y = ylabel, colour = NULL) +
+    labs(title = "Chemical Space (PCA)", x = xlabel, y = ylabel, colour = NULL,
+         subtitle = subtitle) +
     theme_classic(base_size = 13) +
     theme(plot.title = element_text(face = "bold", hjust = .5))
 
@@ -769,6 +840,15 @@ plotTSNE <- function(data, variables, color_by = "None", label_by = "None",
     plot_df$Label <- original[[label_by]]
   }
 
+  ## Permanova + R2
+  perm_fit <- vegan::adonis2(dist(X) ~ original[[color_by]], permutations = 999)
+  perm_r2 <- round(perm_fit$R2[1], 3)
+  perm_f  <- round(perm_fit$F[1], 2)
+  perm_p  <- perm_fit$`Pr(>F)`[1]
+  subtitle <- paste0("PERMANOVA: R\u00B2 = ", perm_r2,
+                     ", F = ", perm_f,
+                     ", p = ", format.pval(perm_p, digits = 3))
+
   p <- ggplot(plot_df, aes(TSNE1, TSNE2)) + geom_point(size = 3)
 
   if ("Color" %in% names(plot_df)) {
@@ -780,7 +860,8 @@ plotTSNE <- function(data, variables, color_by = "None", label_by = "None",
     )
   }
 
-  p + labs(title = "t-SNE Chemical Space", x = "t-SNE 1", y = "t-SNE 2") +
+  p + labs(title = "t-SNE Chemical Space", x = "t-SNE 1", y = "t-SNE 2",
+           subtitle = subtitle) +
     theme_classic(base_size = 13)
 }
 
@@ -876,6 +957,15 @@ plotUMAP <- function(data, variables, color_by = "None", label_by = "None",
     n_components = 2, init = "spectral", verbose = FALSE
   )
 
+
+  perm_fit <- vegan::adonis2(dist(X) ~ original[[color_by]], permutations = 999)
+  perm_r2 <- round(perm_fit$R2[1], 3)
+  perm_f  <- round(perm_fit$F[1], 2)
+  perm_p  <- perm_fit$`Pr(>F)`[1]
+  subtitle <- paste0("PERMANOVA: R\u00B2 = ", perm_r2,
+                     ", F = ", perm_f,
+                     ", p = ", format.pval(perm_p, digits = 3))
+
   plot_df <- data.frame(UMAP1 = emb[, 1], UMAP2 = emb[, 2])
 
   if (!is.null(color_by) && !is.na(color_by) && color_by != "None" &&
@@ -898,7 +988,8 @@ plotUMAP <- function(data, variables, color_by = "None", label_by = "None",
     )
   }
 
-  p + labs(title = "UMAP Chemical Space", x = "UMAP 1", y = "UMAP 2") +
+  p + labs(title = "UMAP Chemical Space", x = "UMAP 1", y = "UMAP 2",
+           subtitle = subtitle) +
     theme_classic(base_size = 13)
 }
 
@@ -959,6 +1050,30 @@ plotParallel <- function(data, variables, color_by = NULL,
   cc <- complete.cases(df)
   df <- df[cc, , drop = FALSE]
 
+
+  n <- nrow(df)
+  k <- ncol(df)
+  cor_mat <- cor(df, use = "pairwise.complete.obs")
+  mean_r <- round(mean(abs(cor_mat[upper.tri(cor_mat)]), na.rm = TRUE), 3)
+
+  has_group <- !is.null(color_by) && !is.na(color_by) && color_by != "None" &&
+    color_by %in% names(data)
+
+  if (has_group) {
+    perm_fit <- vegan::adonis2(dist(df) ~ data[[color_by]][cc], permutations = 999)
+    perm_r2 <- round(perm_fit$R2[1], 3)
+    perm_f  <- round(perm_fit$F[1], 2)
+    perm_p  <- perm_fit$`Pr(>F)`[1]
+    subtitle <- paste0("n = ", n, ", k = ", k,
+                       " | Mean |r| = ", mean_r,
+                       " | PERMANOVA: R\u00B2 = ", perm_r2,
+                       ", F = ", perm_f,
+                       ", p = ", format.pval(perm_p, digits = 3))
+  } else {
+    subtitle <- paste0("n = ", n, ", k = ", k,
+                       " | Mean |r| = ", mean_r)
+  }
+
   if (scale_data) {
     scale_type <- "std"
   } else {
@@ -973,14 +1088,16 @@ plotParallel <- function(data, variables, color_by = NULL,
       groupColumn = "Group", scale = scale_type, alphaLines = 0.5
     ) +
       theme_bw() +
-      labs(x = "Descriptors", y = "Scaled value", color = color_by)
+      labs(title = "Parallel Coordinates", subtitle = subtitle,
+           x = "Descriptors", y = "Scaled value", color = color_by)
   } else {
     p <- GGally::ggparcoord(
       data = df, columns = seq_along(variables),
       scale = scale_type, alphaLines = 0.4
     ) +
       theme_bw() +
-      labs(x = "Descriptors", y = "Scaled value")
+      labs(title = "Parallel Coordinates", subtitle = subtitle,
+           x = "Descriptors", y = "Scaled value")
   }
 
   p
@@ -1011,6 +1128,25 @@ plotViolin <- function(data, variable, group_by,
   stopifnot(variable %in% names(data))
   stopifnot(group_by %in% names(data))
 
+  x <- data[[variable]]
+  groups <- data[[group_by]]
+  x <- x[!is.na(x)]
+  groups <- groups[!is.na(data[[variable]])]
+  n_groups <- length(unique(groups))
+  n <- length(x)
+
+  if (n_groups == 2) {
+    wt <- wilcox.test(x ~ groups)
+    subtitle <- paste0("n = ", n,
+                       " | Wilcoxon: W = ", round(wt$statistic, 1),
+                       ", p = ", format.pval(wt$p.value, digits = 3))
+  } else {
+    kw <- kruskal.test(x ~ groups)
+    subtitle <- paste0("n = ", n,
+                       " |  Kruskal-Wallis: chi-sq = ", round(kw$statistic, 2),
+                       ", p = ", format.pval(kw$p.value, digits = 3))
+  }
+
   p <- ggplot(data, aes(x = .data[[group_by]], y = .data[[variable]],
                         fill = .data[[group_by]])) +
     geom_violin(trim = FALSE, alpha = 0.7)
@@ -1023,7 +1159,9 @@ plotViolin <- function(data, variable, group_by,
   }
 
   p + theme_bw() +
-    labs(x = group_by, y = variable, fill = group_by) +
+    labs(title = paste0(variable, " by ", group_by),
+         subtitle = subtitle,
+         x = group_by, y = variable, fill = group_by) +
     theme(legend.position = "none",
           axis.text.x = element_text(angle = 45, hjust = 1))
 }
@@ -1069,10 +1207,34 @@ plotHistogramCustom <- function(data, variable, bins = 30,
 
   bins <- max(2L, as.integer(bins))
 
-  p <- ggplot(plot_df, aes(x = .data[[variable]]))
-
   has_group <- !is.null(group_by) && group_by != "None" &&
     group_by %in% names(plot_df)
+
+  x <- plot_df[[variable]]
+  n <- length(x)
+  m <- mean(x)
+  s <- sd(x)
+  med <- median(x)
+  q1 <- quantile(x, 0.25)
+  q3 <- quantile(x, 0.75)
+
+  if (has_group) {
+    groups <- plot_df[[group_by]]
+    kw <- kruskal.test(x ~ groups)
+    subtitle <- paste0("n = ", n,
+                       " | Mean = ", round(m, 1), " \u00B1 ", round(s, 1),
+                       " | Kruskal-Wallis: chi-sq = ", round(kw$statistic, 2),
+                       ", p = ", format.pval(kw$p.value, digits = 3))
+  } else {
+    sw <- shapiro.test(x)
+    subtitle <- paste0("n = ", n,
+                       " | Mean = ", round(m, 1), " \u00B1 ", round(s, 1),
+                       " | Median = ", round(med, 1),
+                       " (IQR: ", round(q1, 0), "-", round(q3, 0), ")",
+                       " | Shapiro p = ", format.pval(sw$p.value, digits = 3))
+  }
+
+  p <- ggplot(plot_df, aes(x = .data[[variable]]))
 
   if (has_group) {
     p <- p + geom_histogram(aes(fill = .data[[group_by]], y = after_stat(density)),
@@ -1102,7 +1264,9 @@ plotHistogramCustom <- function(data, variable, bins = 30,
   }
 
   p + theme_bw(base_size = 12) +
-    labs(x = variable, y = "Density",
+    labs(title = paste0("Distribution of ", variable),
+         subtitle = subtitle,
+         x = variable, y = "Density",
          fill = if (has_group) group_by else NULL,
          colour = if (has_group) group_by else NULL) +
     theme(legend.position = "top")

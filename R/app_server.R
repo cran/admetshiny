@@ -524,9 +524,9 @@ app_server <- function(input, output, session) {
       selectInput("cdk_radar_id_col", "Identifier column",
                   choices = names(cdk_resultado()),
                   selected = if ("query" %in% names(cdk_resultado())) "query" else names(cdk_resultado())[1]),
-      selectizeInput("cdk_radar_ids", "Molecules to compare (max 5)",
+      selectizeInput("cdk_radar_ids", "Molecules to compare (max 15)",
                      choices = NULL, multiple = TRUE,
-                     options = list(maxItems = 5, placeholder = "Select up to 5 molecules"))
+                     options = list(maxItems = 15, placeholder = "Select up to 15 molecules"))
     )
   })
 
@@ -1142,10 +1142,10 @@ app_server <- function(input, output, session) {
     tagList(
       selectInput("master_radar_id_col", "Identifier column",
                   choices = cols, selected = default),
-      selectizeInput("master_radar_ids", "Molecules to compare (max 5)",
+      selectizeInput("master_radar_ids", "Molecules to compare (max 15)",
                      choices = NULL, multiple = TRUE,
-                     options = list(maxItems = 5,
-                                    placeholder = "Select up to 5 molecules"))
+                     options = list(maxItems = 15,
+                                    placeholder = "Select up to 15 molecules"))
     )
   })
 
@@ -1602,7 +1602,7 @@ app_server <- function(input, output, session) {
     }
 
     tags$div(
-      style = "width: 100%; height: 850px; overflow-y: auto; border: 1px solid #ddd; border-radius: 8px; padding: 20px; background: white;",
+      style = "width: 100%; height: 850px; overflow-y: auto; border: 1px solid #ddd; border-radius: 8px; padding: 20px;",
       HTML(paste(report_html_rv(), collapse = "\n"))
     )
   })

@@ -73,6 +73,27 @@ dark_mode_ui <- function() {
       body.dark-mode .table-hover > tbody > tr:hover {
         background-color: #404040 !important;
       }
+      body.dark-mode .shiny-html-output {
+        background-color: #2d2d2d !important;
+        color: #e0e0e0 !important;
+      }
+      body.dark-mode div[style*='overflow-y'] {
+        background-color: #2d2d2d !important;
+        color: #e0e0e0 !important;
+        border-color: #444 !important;
+      }
+      body.dark-mode h1, body.dark-mode h2, body.dark-mode h3,
+      body.dark-mode h4, body.dark-mode h5, body.dark-mode h6 {
+        color: #e0e0e0 !important;
+      }
+      body.dark-mode p, body.dark-mode li, body.dark-mode td,
+      body.dark-mode th, body.dark-mode span {
+        color: #e0e0e0 !important;
+      }
+      body.dark-mode table, body.dark-mode .table {
+        background-color: #2d2d2d !important;
+        color: #e0e0e0 !important;
+      }
     "))),
     tags$script(HTML("
       Shiny.addCustomMessageHandler('toggle-dark-mode', function(isDark) {

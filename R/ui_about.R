@@ -25,7 +25,7 @@ about_tab <- function() {
                                tags$h2("ADMETShiny",
                                        style = "font-weight: 800; color: #2c3e50;"),
                                tags$h4(style = "color: #666; font-weight: 400;",
-                                       "An open-source web application for management, calculation, filtering and selection of drug-likeness potential molecules in R with Shiny"),
+                                       "Interactive ADMET and Drug-Likeness Analysis of Small Molecules"),
                                tags$span(class = "badge",
                                          style = "background-color: #4ca1af; color: white; font-size: 14px; padding: 8px 15px; margin-top: 15px;",
                                          tags$b(paste0("Version ", ADMETSHINY_VERSION, " ")),
@@ -120,6 +120,15 @@ about_tab <- function() {
                       )
              )
       ),
+      column(5,
+             tags$div(class = "info-card accent-orange",
+                      tags$div(class = "info-card-header", icon("star"), "Acknowledgements"),
+                      tags$div(class = "info-card-body",
+                               tags$p(style = "color:#555; font-size: 14px; line-height: 1.6; font-style: italic;",
+                                      "Special thanks to my friends and family, who have been a fundamental pillar in my academic life.")
+                      )
+             )
+      ),
       column(6,
              tags$div(class = "info-card accent-green",
                       tags$div(class = "info-card-header", icon("book"), " Citation & Codename"),
@@ -131,6 +140,30 @@ about_tab <- function() {
                                       tags$em(ADMETSHINY_CODENAME),
                                       " is named after one of Colombia's iconic frailejon species, native to the high-altitude paramo ecosystems of the northern Andes. This codename reflects the country's unique botanical diversity, the ecological importance of paramo conservation, and the potential of native plants as a source of bioactive compounds for drug discovery."
                                )
+                      )
+             )
+      )
+    ),
+
+    fluidRow(
+      column(6,
+             tags$div(class = "info-card accent-purple",
+                      tags$div(class = "info-card-header", icon("palette"), " Artwork & Design"),
+                      tags$div(class = "info-card-body",
+                               tags$p(style = "color:#555; font-size: 14px; line-height: 1.6;",
+                                      "The illustration by admetshiny was developed by", tags$b("Jessica Isabel Murcia Astudillo - El Zorro Amarillo"),
+                                      " for designing the scientific illustrations and visual identity of ADMETShiny.")
+                      )
+             )
+      ),
+
+      column(5,
+             tags$div(class = "info-card accent-orange",
+                      tags$div(class = "info-card-header", icon("star"), " In Memoriam"),
+                      tags$div(class = "info-card-body",
+                               tags$p(style = "color:#555; font-size: 14px; line-height: 1.6;",
+                                      "Dedicated to the loving memory of my father,", tags$b("Carlos Xavier Garcia Navia"),
+                                      ", whose encouragement and guidance continue to inspire my scientific work.")
                       )
              )
       )

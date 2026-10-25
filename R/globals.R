@@ -15,7 +15,7 @@ NULL
 
 #' @rdname admetshiny-constants
 #' @keywords internal
-ADMETSHINY_VERSION <- "1.0.0"
+ADMETSHINY_VERSION <- "1.0.1"
 
 #' @rdname admetshiny-constants
 #' @keywords internal

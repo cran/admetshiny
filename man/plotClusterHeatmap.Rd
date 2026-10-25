@@ -45,7 +45,7 @@ The properties (columns) are also clustered and the column dendrogram
 appears on top. Values are z-score standardized per property.
 }
 \details{
-The plot is rendered using base R graphics so it works without additional
+The plot is rendered using pheatmap package graphics so it works without additional
 dependencies beyond what the package already requires.
 }
 \examples{

@@ -51,7 +51,7 @@ getSmilesFromIdentifiers <- function(ids, from = "name") {
 
   props <- webchem::pc_prop(
     cid_df$cid[ok],
-    properties = c("CanonicalSMILES", "IsomericSMILES",
+    properties = c("ConnectivitySMILES", "SMILES",
                    "MolecularFormula", "IUPACName")
   )
 
@@ -62,7 +62,17 @@ getSmilesFromIdentifiers <- function(ids, from = "name") {
     all.x = TRUE
   )
 
-  out[order(match(out$cid, cid_df$cid[ok])), ]
+  out <- out[order(match(out$cid, cid_df$cid[ok])), ]
+
+  ## Renombrar columnas para compatibilidad con versiones anteriores
+  if ("ConnectivitySMILES" %in% names(out) && !"CanonicalSMILES" %in% names(out)) {
+    names(out)[names(out) == "ConnectivitySMILES"] <- "CanonicalSMILES"
+  }
+  if ("SMILES" %in% names(out) && !"IsomericSMILES" %in% names(out)) {
+    names(out)[names(out) == "SMILES"] <- "IsomericSMILES"
+  }
+
+  out
 }
 
 ## ---------------------------------------------------------------------------
@@ -479,8 +489,8 @@ computeADMETProperties <- function(data) {
   ##    Uses a Random Forest classifier (100 trees, max depth = 10) trained
   ##    from 882 experimental P-gp (ABCB1) substrate/non-substrate
   ##    classifications curated from Metrabase (J. Cheminformatics 2015, 7:21).
-  ##    The model uses the 9 CDK descriptors and achieves 69.4% cross-validated
-  ##    accuracy with MCC = 0.383 (5-fold stratified CV). Stored as pure R
+  ##    The model uses the 9 CDK descriptors and achieves 0.6939 cross-validated
+  ##    accuracy with MCC = 0.3825 (5-fold stratified CV). Stored as pure R
   ##    code in R/pgp_model.R; no external ML package required at runtime.
   pgp_prob <- ..predict_pgp(mw, logp, tpsa, hbd, hba, rb,
                             ha, arom, mr)

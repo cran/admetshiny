@@ -29,7 +29,7 @@ Invisibly \code{NULL}; called for the side-effect of drawing the
 radar chart on the current graphics device.
 }
 \description{
-Compares up to 5 molecules simultaneously on a radar chart using 6 key
+Compares up to 15 molecules simultaneously on a radar chart using 6 key
 physicochemical properties, normalized 0-1 against the range observed in
 the full dataset. Requires the suggested package \pkg{fmsb}.
 }

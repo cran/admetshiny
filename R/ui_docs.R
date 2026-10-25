@@ -16,6 +16,17 @@ docs_tab <- function() {
 
     info_card_css(),
 
+    ## Logo hexagonal centrado
+    fluidRow(
+      column(12, style = "text-align: center; margin-bottom: 20px;",
+             tags$img(src = "admetshiny/hexicon.png", width = "120px",
+                      style = "filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));"),
+             tags$h2("ADMETShiny",
+                     style = "font-weight: 800; color: #2c3e50; margin-top: 10px;"),
+             tags$h5(style = "color: #666; font-weight: 400;",
+                     "Interactive ADMET and Drug-Likeness Analysis"))
+    ),
+
     fluidRow(
       column(12,
              tags$div(class = "info-card",

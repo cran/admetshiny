@@ -83,6 +83,11 @@ plotBoiledEgg(filtered)
 # d <- mapADMETColumns(d, mapping, calculate_cdk = TRUE)
 ```
 
+## Acknowledgements & Dedication
+
+* **Artwork & Design:** Special thanks to **[Jessica Isabel Murcia Astudillo 'La zorra amarilla']** for designing the scientific illustrations and visual identity of admetshiny.
+* **In Memoriam:** Dedicated to the loving memory of my father, **[Carlos Xavier Garcia Navia]**, whose encouragement and guidance continue to inspire my scientific work.
+* **Special thanks** to my friends and family, who have been a fundamental pillar in my academic life
 ## References
 
 - Lipinski, C. A., et al. (1997). *Advanced Drug Delivery Reviews*, 23(1-3),

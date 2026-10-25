@@ -33,6 +33,7 @@ export(run_app)
 export(veberFilter)
 import(ggplot2)
 import(shiny)
+import(vegan)
 importFrom(DT,
   DTOutput,
   renderDT
@@ -59,16 +60,23 @@ importFrom(magrittr,"%>%")
 importFrom(stats,
   as.dendrogram,
   as.dist,
+  as.hclust,
   complete.cases,
+  cophenetic,
   cor,
   dist,
   hclust,
   heatmap,
+  kruskal.test,
   median,
   prcomp,
+  quantile,
+  rect.hclust,
   sd,
   setNames,
-  var
+  shapiro.test,
+  var,
+  wilcox.test
 )
 importFrom(utils,
   head,

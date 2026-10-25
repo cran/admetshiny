@@ -493,13 +493,13 @@ generateReportPlots <- function(data, prefix, plot_dir) {
         ## Base R graphics plot (e.g., plotClusterHeatmap, plotRadar,
         ## plotTanimoto) -- use grDevices::png instead of ggsave
         grDevices::png(path, width = w, height = h, units = "in",
-                       res = 150, bg = "white")
+                       res = 300, bg = "white")
         tryCatch(plot_obj(), error = function(e) NULL,
                  finally = grDevices::dev.off())
       } else {
         ## ggplot object
         ggplot2::ggsave(path, plot_obj, width = w, height = h,
-                        dpi = 150, bg = "white")
+                        dpi = 300, bg = "white")
       }
       paths[[name]] <<- path
     }, error = function(e) {
@@ -575,7 +575,14 @@ buildReportMarkdown <- function(datasets, plot_paths) {
     "---",
     "title: \"ADMETShiny Analysis Report\"",
     paste0("date: \"", today, "\""),
-    "output: html_document",
+    "output:",
+    "  html_document:",
+    "    fig_width: 7",
+    "    fig_height: 5",
+    "    theme: cosmo",
+    "    toc: true",
+    "    toc_float: true",
+    "    css: null",
     "---",
     "",
     ""

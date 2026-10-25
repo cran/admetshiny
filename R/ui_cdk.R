@@ -291,7 +291,7 @@ cdk_tab <- function() {
                          "Each axis corresponds to a descriptor. Similar profiles indicate similar properties; deviations highlight differences between molecules."),
                 tags$hr(),
                 uiOutput("cdk_radar_id_selector"),
-                helpText("Select an identifier column (e.g. name or SMILES) and up to 5 molecules to overlay on the radar.")
+                helpText("Select an identifier column (e.g. name or SMILES) and up to 15 molecules to overlay on the radar.")
               ),
 
               conditionalPanel(

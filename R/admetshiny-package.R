@@ -76,11 +76,11 @@
 #' @name admetshiny-package
 #' @docType package
 #' @import shiny
-#' @import ggplot2
+#' @import ggplot2 vegan
 #' @importFrom dplyr filter mutate select
 #' @importFrom magrittr %>%
 #' @importFrom DT DTOutput renderDT
-#' @importFrom stats prcomp cor complete.cases as.dist median sd setNames var dist hclust as.dendrogram heatmap
+#' @importFrom stats prcomp cor complete.cases as.dist median sd setNames var dist hclust as.dendrogram heatmap as.hclust cophenetic rect.hclust kruskal.test quantile shapiro.test wilcox.test
 #' @importFrom utils read.csv write.csv head
 #' @importFrom grDevices rainbow colorRampPalette
 #' @importFrom graphics legend par layout image axis mtext

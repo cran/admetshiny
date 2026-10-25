@@ -280,7 +280,7 @@ admet_master_tab <- function() {
                      "Each axis corresponds to a descriptor. Similar profiles indicate similar properties; deviations highlight differences between molecules."),
             tags$hr(),
             uiOutput("master_radar_id_selector"),
-            helpText("Select an identifier column (e.g., name or SMILES). Max 5 molecules in the radar plot")
+            helpText("Select an identifier column (e.g., name or SMILES). Max 15 molecules in the radar plot")
           ),
 
           conditionalPanel(

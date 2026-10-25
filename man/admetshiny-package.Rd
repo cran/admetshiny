@@ -92,7 +92,7 @@ By Xavier Clemente Garcia Cevallos :3 "Hecho con amor para la ciencia"
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/xavierclementegarcia/admetshiny}
+  \item \url{https://xavierclementegarcia.github.io/ADMETShiny/}
   \item Report bugs at \url{https://github.com/xavierclementegarcia/admetshiny/issues}
 }
 

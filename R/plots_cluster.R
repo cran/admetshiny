@@ -14,7 +14,7 @@
 #' The properties (columns) are also clustered and the column dendrogram
 #' appears on top. Values are z-score standardized per property.
 #'
-#' The plot is rendered using base R graphics so it works without additional
+#' The plot is rendered using pheatmap package graphics so it works without additional
 #' dependencies beyond what the package already requires.
 #'
 #' @param data A data.frame with physicochemical property columns.
@@ -49,7 +49,6 @@
 plotClusterHeatmap <- function(data, variables = NULL, id_col = NULL,
                                method = "ward.D2", scale_data = TRUE,
                                palette = "default") {
-
   default_vars <- c(
     "MW", "LogP", "TPSA", "MR",
     "#H-bond acceptors", "#H-bond donors",
@@ -182,10 +181,25 @@ plotClusterHeatmap <- function(data, variables = NULL, id_col = NULL,
           margins = c(8, left_margin),
           labRow = lab_row,
           labCol = colnames(mat),
-          main = "Cluster Heatmap (Dendrogram)",
+          main = paste0("Cluster Heatmap (Dendrogram)",
+                        "Cophenetic r = ",
+                        round(cor(row_dist, cophenetic(row_hclust)), 3)),
           xlab = "", ylab = "",
           cexCol = 0.9,
           cexRow = cex_row)
+
+  val_range <- range(mat, na.rm = TRUE)
+  n_legend <- 5
+  legend_colors <- colors[round(seq(1, length(colors), length.out = n_legend))]
+  legend_vals <- round(seq(val_range[1], val_range[2], length.out = n_legend), 2)
+
+  legend("topright",
+         legend = legend_vals,
+         fill = legend_colors,
+         title = if (scale_data) "Z-score" else "Value",
+         cex = 0.7,
+         bty = "n",
+         y.intersp = 0.8)
 
   invisible(NULL)
 }
